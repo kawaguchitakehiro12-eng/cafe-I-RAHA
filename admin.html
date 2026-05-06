@@ -96,6 +96,23 @@ const API_URL = "https://lingering-cell-217e.kawaguchitakehiro12.workers.dev";
 
 let menuData = { categories: [] };
 
+  let heroImageFile = null;
+
+document.getElementById("heroImageFile").addEventListener("change", function(e){
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event){
+    heroImageFile = {
+      name: file.name,
+      type: file.type,
+      dataUrl: event.target.result
+    };
+  };
+  reader.readAsDataURL(file);
+});
+  
 fetch('./data/site.json')
 .then(r => r.json())
 .then(data => {
@@ -262,10 +279,13 @@ async function saveData(){
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({
-        repo:"cafe-I-RAHA",
-        siteData,
-        menuData
-      })
+  repo:"cafe-template",
+  siteData,
+  menuData,
+  imageFiles: {
+    hero: heroImageFile
+  }
+})
     });
 
     const result = await res.json();
